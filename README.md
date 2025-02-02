@@ -17,12 +17,8 @@ If the logfile is not set it will take the default value : '%TEMP%\Write-Log-*GU
 
 If the Level is not set it will take the default value : 'Info'
 
-> [IMPORTANT!] 
+> [IMPORTANT!]
 > First call to Write-Log will set LogLevel and LogFile for the scope.
->
-> The **first call** to Write-Log in the script scope will write a header to the log file with several informations. 
->
-> It will also define the default LogFile and LogLevel for the scope.
 
 ### Syntax
 ```powershell
