@@ -17,7 +17,7 @@ If the logfile is not set it will take the default value : '%TEMP%\Write-Log-*GU
 
 If the Level is not set it will take the default value : 'Info'
 
-> [IMPORTANT!]
+> [!IMPORTANT]
 > First call to Write-Log will set LogLevel and LogFile for the scope.
 
 ### Syntax
