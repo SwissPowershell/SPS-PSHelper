@@ -72,8 +72,10 @@ Function Write-Log {
         # Handle the logfile path
         if ($LogFile -ne '') {
             # The logfile has been provided store in '$Script:__SPS_LogFile' for next execution by the same script
-            $Script:__SPS_LogFile = $LogFile
-            $FirstCall = $True
+            if ($LogFile -ne $Script:__SPS_LogFile) {
+                $Script:__SPS_LogFile = $LogFile
+                $FirstCall = $True
+            }
         }Elseif ($Script:__SPS_LogFile -notlike '') {
             # The logfile has been stored in '$Script:__SPS_LogFile' use it
             $LogFile = $Script:__SPS_LogFile
@@ -140,6 +142,10 @@ Function Write-Log {
         $LogLevelIndex = [Array]::IndexOf(@('DEBUG', 'VERBOSE', 'INFO', 'WARN', 'ERROR', 'CRITIC'), $LogLevel)  
         $LevelIndex = [Array]::IndexOf(@('DEBUG', 'VERBOSE', 'INFO', 'WARN', 'ERROR', 'CRITIC'), $Level)
         if ($LevelIndex -ge $LogLevelIndex) {
+            if (($Message -eq '') -and ($FirstCall -eq $True)) {
+                # The message is empty and it is the first call, do not write to the log file
+                Return
+            }   
             # The log level is greater or equal than the LogLevel, write to the log file
             # Build the log entry
             $TimeStamp = "$(Get-Date -Format (Get-Culture).DateTimeFormat.LongTimePattern).$(Get-Date -Format 'fff')"

@@ -25,8 +25,9 @@ if (Get-Variable -Name PSStyle -ErrorAction SilentlyContinue) {
 # Test your functions here #
 ############################
 
-Write-Log 'Toto 1' -Level 'DEBUG' -LogFile "c:\Temp\MyLog.log" -LogLevel 'INFO'
+Write-Log -Level 'DEBUG' -LogFile "c:\Temp\MyLog.log" -LogLevel 'DEBUG'
 Write-Log 'Toto 2' -Level 'VERBOSE'
+Write-Log -Level 'DEBUG' 
 Write-Log 'Toto 3' -Level 'Info'
 Write-Log 'Toto 4' -Level 'VERBOSE'
 Write-Log 'Toto 5' -Level 'DEBUG'

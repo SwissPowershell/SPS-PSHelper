@@ -21,7 +21,7 @@ If the Level is not set it will take the default value : 'Info'
 > First call to Write-Log will set **LogLevel** and **LogFile** for the script scope. 
 
 > [!IMPORTANT]
-> First call to Write-Log in the script scope will add an HEADER to the log file.
+> First call to Write-Log in the script scope will add a HEADER to the log file.
 
 > [!IMPORTANT]
 > You don't need to set them for each call. 
