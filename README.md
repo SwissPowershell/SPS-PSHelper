@@ -19,7 +19,11 @@ If the Level is not set it will take the default value : 'Info'
 
 > [!IMPORTANT]
 > First call to Write-Log will set **LogLevel** and **LogFile** for the script scope. 
-> 
+
+> [!IMPORTANT]
+> First call to Write-Log in the script scope will add an HEADER to the log file.
+
+> [!IMPORTANT]
 > You don't need to set them for each call. 
 
 ### Syntax
@@ -62,7 +66,7 @@ The level of the message. The default is 'Info'
 
 **\-LogFile**
 
-The path of the log file. The default is '%TEMP%\Write-Log-*GUID*.log'
+The path of the log file. The default is '%TEMP%\Write-Log-*GUID*.log'. If LogFile is set will set the LogFile for the script scope.
 
     Type: String
     Mandatory: False
@@ -70,7 +74,7 @@ The path of the log file. The default is '%TEMP%\Write-Log-*GUID*.log'
 
 **\-LogLevel**
 
-The level of the log file. The default is 'Info'
+The level of the log file. The default is **'Info'**. The log file will only contain message with a level equal or higher than the LogLevel. Loglevel can be 'Info', 'Debug', 'Warning', 'Error'. if Loglevel is set will set the LogLevel for the script scope.
 
     Type: String
     Mandatory: False
