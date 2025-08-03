@@ -97,11 +97,11 @@ New-FunctionToClip
 ```
 ### Example 1: Create a new function and copy the code to the clipboard
 ```powershell
-New-FunctionToClip -Name 'MyNewFunction'
+New-FunctionToClip -Name 'New-Function'
 ```
 ### Example 2: Create a new function with a custom name and copy the code to the clipboard
 ```powershell
-New-FunctionToClip -Name 'CustomFunctionName'
+New-FunctionToClip -Name 'Custom-FunctionName' -Force
 ```
 ### Parameters
 **\-Name**
