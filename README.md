@@ -113,6 +113,7 @@ The name of the function to create.
     Position: 0
 
 **\-Simple**
+
 If specified, the function will be created with a simple template without parameters and help message.
 
     Type: Switch
@@ -120,10 +121,13 @@ If specified, the function will be created with a simple template without parame
     Position: 1
 
 **\-Force**
+
 If specified, skips the validation of the function name and allows any name to be used.
+
     Type: Switch
     Mandatory: False
     Position: 2
+
 ### Common Parameters
 This cmdlet supports the common parameters: `-Verbose`, `-Debug`, `-ErrorAction`, `-WarningAction`, `-ErrorVariable`, `-OutVariable`, and `-OutBuffer`. For more information, see [about_CommonParameters](https://go.microsoft.com/fwlink/?LinkID=113216).
 ## New-ClassToClip
