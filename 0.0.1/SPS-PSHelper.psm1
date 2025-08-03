@@ -216,16 +216,28 @@ Function New-FunctionToClip {
         [Switch] ${Simple},
         [Switch] ${Force}
     )
-    if (-not $Force) {
-        # Check if the name provided use the verb-noun format
-        if ($Name -notmatch '^(?<Verb>[a-z]+)-(?<Noun>[A-Z][a-zA-Z0-9]*)$') {
-            Write-Warning "The function name '$Name' does not follow the verb-noun format. It should be in the format 'Verb-Noun'."
-            Return
-        }Else{
-            $Verb = $Matches['Verb']
-            if ($Verb -NotIn $(Get-Verb | Select-Object -ExpandProperty Verb)) {
-                Write-Warning "The verb '$Verb' is not a valid PowerShell verb. Please use a valid verb."
-                Return
+    # Check if the name provided use the verb-noun format
+    if ($Name -notmatch '^(?<Verb>[a-z]+)-(?<Noun>[A-Z][a-zA-Z0-9]*)$') {
+        Write-Warning "The function name '$Name' does not follow the verb-noun format. It should be in the format 'Verb-Noun'."
+        if (-not $Force){
+            return
+        }
+    }Else{
+        $Verb = $Matches['Verb']
+        if ($Verb -NotIn $(Get-Verb | Select-Object -ExpandProperty Verb)) {
+            Write-Warning "The verb '$Verb' is not a valid PowerShell verb. Please use a valid verb."
+            if (-not $Force){
+                return
+            }
+        }
+    }
+    # Check if the name provided already exists in other modules
+    $AllModules = Get-Module -ListAvailable
+    ForEach ($Module in $AllModules) {
+        if ($Module.ExportedCommands.Values.Name -contains $Name) {
+            Write-Warning "The function '$Name' already exists in the module '$($Module.Name)'. Please choose a different name."
+            if (-not $Force){
+                return
             }
         }
     }
