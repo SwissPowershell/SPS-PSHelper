@@ -6,6 +6,8 @@ This module provides a set of cmdlet that I use frequently. It is a collection o
 
 ## Cmdlet
 - Write-Log
+- New-FunctionToClip
+- New-ClassToClip
 
 ## Write-Log
 
@@ -79,3 +81,74 @@ The level of the log file. The default is **'Info'**. The log file will only con
     Type: String
     Mandatory: False
     Position: 3
+### Common Parameters
+This cmdlet supports the common parameters: `-Verbose`, `-Debug`, `-ErrorAction`, `-WarningAction`, `-ErrorVariable`, `-OutVariable`, and `-OutBuffer`. For more information, see [about_CommonParameters](https://go.microsoft.com/fwlink/?LinkID=113216).
+
+## New-FunctionToClip
+### Description
+This cmdlet creates a new PowerShell function and copies the code to the clipboard. The function is a template that can be used to create a new function quickly. The function will have a name. The function will also have a parameter for the name of the function. If the `-Simple` switch is used, the function will be created with a simple template without parameters and help message.
+### Syntax
+```powershell
+New-FunctionToClip
+    [[-Name] <String>]
+    [[-Simple] <Switch>]
+    [[-Force] <Switch>]
+    [<CommonParameters>]
+```
+### Example 1: Create a new function and copy the code to the clipboard
+```powershell
+New-FunctionToClip -Name 'MyNewFunction'
+```
+### Example 2: Create a new function with a custom name and copy the code to the clipboard
+```powershell
+New-FunctionToClip -Name 'CustomFunctionName'
+```
+### Parameters
+**\-Name**
+
+The name of the function to create.
+
+    Type: String
+    Mandatory: False
+    Position: 0
+
+**\-Simple**
+If specified, the function will be created with a simple template without parameters and help message.
+
+    Type: Switch
+    Mandatory: False
+    Position: 1
+
+**\-Force**
+If specified, skips the validation of the function name and allows any name to be used.
+    Type: Switch
+    Mandatory: False
+    Position: 2
+### Common Parameters
+This cmdlet supports the common parameters: `-Verbose`, `-Debug`, `-ErrorAction`, `-WarningAction`, `-ErrorVariable`, `-OutVariable`, and `-OutBuffer`. For more information, see [about_CommonParameters](https://go.microsoft.com/fwlink/?LinkID=113216).
+## New-ClassToClip
+### Description
+This cmdlet creates a new PowerShell class and copies the code to the clipboard. The class is a template that can be used to create a new class quickly.
+### Syntax
+```powershell
+New-ClassToClip
+    [[-Name] <String>]
+    [<CommonParameters>]
+```
+### Example 1: Create a new class and copy the code to the clipboard
+```powershell
+New-ClassToClip -Name 'MyNewClass'
+```
+### Example 2: Create a new class with a custom name and copy the code to the clipboard
+```powershell
+New-ClassToClip -Name 'CustomClassName'
+```
+### Parameters
+**\-Name**
+The name of the class to create. It should start with an uppercase letter and contain only alphanumeric characters.
+    Type: String
+    Mandatory: False
+    Position: 0
+### Common Parameters
+This cmdlet supports the common parameters: `-Verbose`, `-Debug`, `-ErrorAction`, `-WarningAction`, `-ErrorVariable`, `-OutVariable`, and `-OutBuffer`. For more information, see [about_CommonParameters](https://go.microsoft.com/fwlink/?LinkID=113216).
+
