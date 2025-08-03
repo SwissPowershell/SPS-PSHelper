@@ -145,10 +145,13 @@ New-ClassToClip -Name 'CustomClassName'
 ```
 ### Parameters
 **\-Name**
+
 The name of the class to create. It should start with an uppercase letter and contain only alphanumeric characters.
+
     Type: String
     Mandatory: False
     Position: 0
+
 ### Common Parameters
 This cmdlet supports the common parameters: `-Verbose`, `-Debug`, `-ErrorAction`, `-WarningAction`, `-ErrorVariable`, `-OutVariable`, and `-OutBuffer`. For more information, see [about_CommonParameters](https://go.microsoft.com/fwlink/?LinkID=113216).
 
