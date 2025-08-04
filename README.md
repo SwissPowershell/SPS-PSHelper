@@ -150,7 +150,7 @@ New-ClassToClip -Name 'CustomClassName'
 ### Parameters
 **\-Name**
 
-The name of the class to create. It should start with an uppercase letter and contain only alphanumeric characters.
+The name of the class to create. It should contain only alphanumeric characters.
 
     Type: String
     Mandatory: False

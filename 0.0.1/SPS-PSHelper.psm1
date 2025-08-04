@@ -1,5 +1,5 @@
 
-    Function Write-Log {
+Function Write-Log {
         <#
         .SYNOPSIS
         Writes a log entry to a log file or the console.
@@ -167,6 +167,7 @@ PSEdition: $($Host.Name)
         if ($LevelIndex -ge $LogLevelIndex) {
             if (($Message -eq '') -and ($FirstCall -eq $True)) {
                 # The message is empty and it is the first call, do not write to the log file
+                $FirstCall = $False
                 Return
             }   
             # The log level is greater or equal than the LogLevel, write to the log file
@@ -179,7 +180,8 @@ PSEdition: $($Host.Name)
                 Throw "Unexepected error while writing the log file line: $($_.Exception.Message)"
             }
         }
-
+        # Reset the first call flag
+        $FirstCall = $False
     }
     END{}
 }
