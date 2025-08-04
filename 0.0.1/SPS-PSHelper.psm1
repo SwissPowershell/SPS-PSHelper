@@ -1,4 +1,12 @@
-
+Enum SPSLogLevel {
+    NONE = 0
+    DEBUG = 1
+    VERBOSE = 2
+    INFO = 3
+    WARN = 4
+    ERROR = 5
+    CRITIC = 6
+}
 Function Write-Log {
         <#
         .SYNOPSIS
@@ -38,8 +46,7 @@ Function Write-Log {
                 Mandatory=$False,
                 HelpMessage='The log level.'
             )]
-            [ValidateSet('DEBUG', 'VERBOSE', 'INFO', 'WARN', 'ERROR', 'CRITIC')]
-            [String] ${Level} = 'INFO',
+            [SPSLogLevel] ${Level} = [SPSLogLevel]::NONE,
             [Parameter(
                 Position=3,
                 Mandatory=$False,
@@ -51,8 +58,7 @@ Function Write-Log {
                 Mandatory=$False,
                 HelpMessage='The log level. Default is INFO. Everything below will not be written.'
             )]
-            [ValidateSet('DEBUG', 'VERBOSE', 'INFO', 'WARN', 'ERROR', 'CRITIC')]
-            [String] ${LogLevel} = ''
+            [SPSLogLevel] ${LogLevel} = [SPSLogLevel]::NONE
         )
         BEGIN{
         Write-Verbose "Starting $($MyInvocation.MyCommand)"
@@ -63,8 +69,7 @@ Function Write-Log {
                     Mandatory=$True,
                     HelpMessage='The log level. Default is INFO. Everything below will not be written.'
                 )]
-                [ValidateSet('DEBUG', 'VERBOSE', 'INFO', 'WARN', 'ERROR', 'CRITIC')]
-                [String] ${LogLevel}
+                [SPSLogLevel] ${LogLevel}
             )
             $OVerbosePreference = $VerbosePreference
             $VerbosePreference = 'SilentlyContinue'
@@ -91,11 +96,9 @@ PSEdition: $($Host.Name)
             $VerbosePreference = $OVerbosePreference
             Write-Output $Content
         }
-        # Uppercase the log level
-        $Level = $Level.ToUpper()
         $FirstCall = $False
         # Handle the logfile path
-        if ($LogFile -ne '') {
+        If ([String]::IsNullOrEmpty($LogFile) -eq  $False) {
             # The logfile has been provided store in '$Script:__SPS_LogFile' for next execution by the same script
             if ($LogFile -ne $Script:__SPS_LogFile) {
                 $Script:__SPS_LogFile = $LogFile
@@ -107,19 +110,20 @@ PSEdition: $($Host.Name)
         }Else {
             # The logfile has not been provided, create a new one and store it in '$Script:__SPS_LogFile' for next execution by the same script
             $Script:__SPS_LogFile = "$($Env:TEMP)\$($MyInvocation.MyCommand)-$([Guid]::NewGuid().Guid).log"
+            Write-Warning "Log file not specified, using temporary file: $($Script:__SPS_LogFile)"
             $LogFile = $Script:__SPS_LogFile
         }
         # Handle the log level
-        if ($LogLevel -ne '') {
+        if ($LogLevel -ne [SPSLogLevel]::NONE) {
             # The log level has been provided store in '$Script:__SPS_LogLevel' for next execution by the same script
             $Script:__SPS_LogLevel = $LogLevel
-        }Elseif ($Script:__SPS_LogLevel -notlike '') {
+        }Elseif (($Script:__SPS_LogLevel -ne [SPSLogLevel]::NONE) -and ($null -ne $Script:__SPS_LogLevel) -and (-not $Script:__SPS_LogLevel)) {
             # The log level has been stored in '$Script:__SPS_LogLevel' use it
-            $LogLevel = $Script:__SPS_LogLevel
+            $LogLevel = [SPSLogLevel] "$($Script:__SPS_LogLevel)"
         }Else {
             # The log level has not been provided, set it to INFO and store it in '$Script:__SPS_LogLevel' for next execution by the same script
-            $Script:__SPS_LogLevel = 'INFO'
-            $LogLevel = $Script:__SPS_LogLevel
+            $Script:__SPS_LogLevel = [SPSLogLevel]::INFO
+            $LogLevel = [SPSLogLevel]::INFO
         }
         if ((Test-Path -Path $LogFile) -eq $False) {
             $FirstCall = $True
@@ -129,27 +133,34 @@ PSEdition: $($Host.Name)
         Write-Verbose "Processing $($MyInvocation.MyCommand)"
         # Write to the stream
         Switch ($Level) {
-            'DEBUG' {
+            {$_ -eq [SPSLogLevel]::DEBUG} {
                 Write-Debug $Message
+                BREAK
             }
-            'VERBOSE' {
+            {$_ -eq [SPSLogLevel]::VERBOSE} {
                 Write-Verbose $Message
+                BREAK
             }
-            'INFO*' {
+            {$_ -eq [SPSLogLevel]::INFO -or $_ -eq [SPSLogLevel]::NONE} {
+                $Level = [SPSLogLevel]::INFO
                 if (Get-Command -Name Write-Information) {
-                    Write-Information -MessageData $Message
+                    Write-Information $Message
                 }Else{
                     Write-Host $Message
                 }
+                BREAK
             }
-            'WARN*' {
+            {$_ -like [SPSLogLevel]::WARN} {
                 Write-Warning $Message
+                BREAK
             }
-            'ERROR' {
+            {$_ -like [SPSLogLevel]::ERROR} {
                 Write-Error $Message
+                BREAK
             }
-            'CRITIC*' {
+            {$_ -like [SPSLogLevel]::CRITIC} {
                 Write-Error $Message
+                BREAK
             }
         }
         # For the first call, create the log file Header
@@ -162,9 +173,7 @@ PSEdition: $($Host.Name)
             }
         }
         # Check if the log level is above the LogLevel
-        $LogLevelIndex = [Array]::IndexOf(@('DEBUG', 'VERBOSE', 'INFO', 'WARN', 'ERROR', 'CRITIC'), $LogLevel)  
-        $LevelIndex = [Array]::IndexOf(@('DEBUG', 'VERBOSE', 'INFO', 'WARN', 'ERROR', 'CRITIC'), $Level)
-        if ($LevelIndex -ge $LogLevelIndex) {
+        if ($Level -ge $LogLevel) {
             if (($Message -eq '') -and ($FirstCall -eq $True)) {
                 # The message is empty and it is the first call, do not write to the log file
                 $FirstCall = $False

@@ -23,10 +23,10 @@ If the Level is not set it will take the default value : 'Info'
 > First call to Write-Log will set **LogLevel** and **LogFile** for the script scope. 
 
 > [!IMPORTANT]
-> First call to Write-Log in the script scope will add a HEADER to the log file.
+> First call to Write-Log in the script scope will add a **HEADER** to the log file.
 
 > [!IMPORTANT]
-> You don't need to set them for each call. 
+> You don't need to set **LogLevel** and **LogFile** for each call. 
 
 ### Syntax
 ```powershell
@@ -57,6 +57,7 @@ The message to write to the console and the log file.
     Type: String
     Mandatory: False
     Position: 0
+    ValueFromPipeline: True
 
 **\-Level**
 
