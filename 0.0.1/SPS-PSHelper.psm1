@@ -1,19 +1,76 @@
-Function New-LogHeader {
-    Param(
-        [Parameter(
-            Position=1,
-            Mandatory=$True,
-            HelpMessage='The log level. Default is INFO. Everything below will not be written.'
-        )]
-        [ValidateSet('DEBUG', 'VERBOSE', 'INFO', 'WARN', 'ERROR', 'CRITIC')]
-        [String] ${LogLevel}
-    )
-    $OVerbosePreference = $VerbosePreference
-    $VerbosePreference = 'SilentlyContinue'
-    $Process = Get-Process -Id $PID -Verbose:$False
-    $CurrentDate = Get-Date -Format (Get-Culture).DateTimeFormat.ShortDatePattern
-    $CurrentTime = "$(Get-Date -Format (Get-Culture).DateTimeFormat.LongTimePattern).$(Get-Date -Format 'fff')"
-    $Content = @"
+
+    Function Write-Log {
+        <#
+        .SYNOPSIS
+        Writes a log entry to a log file or the console.
+        .DESCRIPTION
+        This function writes a log entry to a log file or the console. It supports different log levels and can be used to log messages during script execution.
+        .PARAMETER Message
+        The message to log.
+        .PARAMETER Level
+        The log level. Default is INFO. Everything below will not be written.
+        .PARAMETER LogFile
+        The log file location. If not specified, a temporary file will be created.
+        .PARAMETER LogLevel
+        The log level. Default is INFO. Everything below will not be written.
+        .EXAMPLE
+        Write-Log -Message 'This is an info message.' -Level 'INFO'
+        Logs an info message to the console or log file.
+        .EXAMPLE
+        Write-Log -Message 'This is a warning message.' -Level 'WARN' -LogFile 'C:\Logs\MyScript.log'
+        Logs a warning message to the specified log file.
+        .EXAMPLE
+        Write-Log -Message 'This is an error message.' -Level 'ERROR'
+        Logs an error message to the console or log file.
+        #>
+        [CmdletBinding()]
+        Param(
+            [Parameter(
+                Position=1,
+                Mandatory=$False,
+                HelpMessage='The message to log.'
+            )]
+            [String] ${Message} = '',
+
+            [Parameter(
+                Position=2,
+                Mandatory=$False,
+                HelpMessage='The log level.'
+            )]
+            [ValidateSet('DEBUG', 'VERBOSE', 'INFO', 'WARN', 'ERROR', 'CRITIC')]
+            [String] ${Level} = 'INFO',
+            [Parameter(
+                Position=3,
+                Mandatory=$False,
+                HelpMessage='The log file location.'
+            )]
+            [String] ${LogFile} = '',
+            [Parameter(
+                Position=4,
+                Mandatory=$False,
+                HelpMessage='The log level. Default is INFO. Everything below will not be written.'
+            )]
+            [ValidateSet('DEBUG', 'VERBOSE', 'INFO', 'WARN', 'ERROR', 'CRITIC')]
+            [String] ${LogLevel} = ''
+        )
+        BEGIN{
+        Write-Verbose "Starting $($MyInvocation.MyCommand)"
+        Function New-LogHeader {
+            Param(
+                [Parameter(
+                    Position=1,
+                    Mandatory=$True,
+                    HelpMessage='The log level. Default is INFO. Everything below will not be written.'
+                )]
+                [ValidateSet('DEBUG', 'VERBOSE', 'INFO', 'WARN', 'ERROR', 'CRITIC')]
+                [String] ${LogLevel}
+            )
+            $OVerbosePreference = $VerbosePreference
+            $VerbosePreference = 'SilentlyContinue'
+            $Process = Get-Process -Id $PID -Verbose:$False
+            $CurrentDate = Get-Date -Format (Get-Culture).DateTimeFormat.ShortDatePattern
+            $CurrentTime = "$(Get-Date -Format (Get-Culture).DateTimeFormat.LongTimePattern).$(Get-Date -Format 'fff')"
+            $Content = @"
 **********************
 Write-Log start
 Init Log Level: $($LogLevel)
@@ -30,65 +87,9 @@ PSEdition: $($Host.Name)
 **********************
 
 "@
-    $VerbosePreference = $OVerbosePreference
-    Write-Output $Content
-}
-Function Write-Log {
-    <#
-    .SYNOPSIS
-    Writes a log entry to a log file or the console.
-    .DESCRIPTION
-    This function writes a log entry to a log file or the console. It supports different log levels and can be used to log messages during script execution.
-    .PARAMETER Message
-    The message to log.
-    .PARAMETER Level
-    The log level. Default is INFO. Everything below will not be written.
-    .PARAMETER LogFile
-    The log file location. If not specified, a temporary file will be created.
-    .PARAMETER LogLevel
-    The log level. Default is INFO. Everything below will not be written.
-    .EXAMPLE
-    Write-Log -Message 'This is an info message.' -Level 'INFO'
-    Logs an info message to the console or log file.
-    .EXAMPLE
-    Write-Log -Message 'This is a warning message.' -Level 'WARN' -LogFile 'C:\Logs\MyScript.log'
-    Logs a warning message to the specified log file.
-    .EXAMPLE
-    Write-Log -Message 'This is an error message.' -Level 'ERROR'
-    Logs an error message to the console or log file.
-    #>
-    [CmdletBinding()]
-    Param(
-        [Parameter(
-            Position=1,
-            Mandatory=$False,
-            HelpMessage='The message to log.'
-        )]
-        [String] ${Message} = '',
-
-        [Parameter(
-            Position=2,
-            Mandatory=$False,
-            HelpMessage='The log level.'
-        )]
-        [ValidateSet('DEBUG', 'VERBOSE', 'INFO', 'WARN', 'ERROR', 'CRITIC')]
-        [String] ${Level} = 'INFO',
-        [Parameter(
-            Position=3,
-            Mandatory=$False,
-            HelpMessage='The log file location.'
-        )]
-        [String] ${LogFile} = '',
-        [Parameter(
-            Position=4,
-            Mandatory=$False,
-            HelpMessage='The log level. Default is INFO. Everything below will not be written.'
-        )]
-        [ValidateSet('DEBUG', 'VERBOSE', 'INFO', 'WARN', 'ERROR', 'CRITIC')]
-        [String] ${LogLevel} = ''
-    )
-    BEGIN{
-        Write-Verbose "Starting $($MyInvocation.MyCommand)"
+            $VerbosePreference = $OVerbosePreference
+            Write-Output $Content
+        }
         # Uppercase the log level
         $Level = $Level.ToUpper()
         $FirstCall = $False
