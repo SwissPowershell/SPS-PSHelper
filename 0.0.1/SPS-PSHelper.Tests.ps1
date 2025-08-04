@@ -59,6 +59,7 @@ Describe 'Write-Log' {
 
 Describe 'New-FunctionToClip' {
     It 'Copies a simple function to clipboard' {
+        Set-ClipBoard -Value ''
         New-FunctionToClip -Name 'Get-TestFunction' -Simple
         $Clipboard = Get-Clipboard
         ($Clipboard | Where-Object { $_ -match '^Function Get-TestFunction' }).Count | Should -BeGreaterThan 0
@@ -71,6 +72,7 @@ Describe 'New-FunctionToClip' {
     }
 
     It 'Allows invalid name with Force' {
+        Set-ClipBoard -Value ''
         New-FunctionToClip -Name 'InvalidName' -Force
         $Clipboard = Get-Clipboard
         ($Clipboard | Where-Object { $_ -match '^Function InvalidName' }).Count | Should -BeGreaterThan 0
@@ -79,6 +81,7 @@ Describe 'New-FunctionToClip' {
 
 Describe 'New-ClassToClip' {
     It 'Copies a class to clipboard' {
+        Set-ClipBoard -Value ''
         New-ClassToClip -Name 'TestClass'
         $Clipboard = Get-Clipboard
         ($Clipboard | Where-Object { $_ -match '^Class TestClass' }).Count | Should -BeGreaterThan 0

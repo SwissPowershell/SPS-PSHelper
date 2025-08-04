@@ -28,7 +28,8 @@
             [Parameter(
                 Position=1,
                 Mandatory=$False,
-                HelpMessage='The message to log.'
+                HelpMessage='The message to log.',
+                ValueFromPipeline=$True
             )]
             [String] ${Message} = '',
 

@@ -22,23 +22,46 @@ if (Get-Variable -Name PSStyle -ErrorAction SilentlyContinue) {
 }
 
 ############################
-# Test your functions here #
+# Debug your functions here #
 ############################
 
-Write-Log -Level 'DEBUG' -LogFile "c:\Temp\MyLog.log" -LogLevel 'DEBUG'
-Write-Log 'Toto 2' -Level 'VERBOSE'
-Write-Log -Level 'DEBUG' 
-Write-Log 'Toto 3' -Level 'Info'
-Write-Log 'Toto 4' -Level 'VERBOSE'
-Write-Log 'Toto 5' -Level 'DEBUG'
-Write-Log 'Toto 6' -Level 'VERBOSE'
+# Debug the Write-Log function
+$LogFile = "$($Env:TEMP)\SPS-PSHelper-DEBUG-$(New-Guid).log"
+# Create the log file and define the log level
+Write-Log -Message 'Entering Tests...' -Level 'DEBUG' -LogFile $LogFile -LogLevel 'DEBUG'
+# Should Write a verbose message and a verbose line in the log file
+Write-Log 'First line of Test (Verbose)' -Level 'VERBOSE'
+# Should Write a debug message and a debug line in the log file
+Write-Log -Level 'DEBUG' -Message 'Second line of Test (Debug)'
+Write-Log -Level 'INFO' -Message 'Third line of Test (Info)'
+Write-Log -Level 'VERBOSE' -Message 'Fourth line of Test (Verbose)'
+Write-Log -Level 'DEBUG' -Message 'Fifth line of Test (Debug)'
+Write-Log -Level 'VERBOSE' -Message 'Sixth line of Test (Verbose)'
 
-# git add --all;Git commit -a -am 'Initial Commit';Git push
+Write-Host "You can find the log file at: $LogFile" -ForegroundColor Cyan
+
+# Debug the New-FunctionToClip function
+# Should copy the function to the clipboard
+Set-ClipBoard -Value ''
+New-FunctionToClip -Name 'Get-TestFunction'
+# Showing the clipboard content
+$ClipboardContent = Get-Clipboard
+"Clipboard content:","" | Write-Host -ForegroundColor Cyan
+$ClipboardContent | Write-Host -ForegroundColor Green
+"","-- End of Clipboard content --" | Write-Host -ForegroundColor Cyan
+
+# Debug the New-ClassToClip function
+Set-ClipBoard -Value ''
+New-ClassToClip -Name 'TestClass'
+$ClipboardContent = Get-Clipboard
+"Clipboard content:","" | Write-Host -ForegroundColor Cyan
+$ClipboardContent | Write-Host -ForegroundColor Green
+"","-- End of Clipboard content --" | Write-Host -ForegroundColor Cyan
 
 ##################################
-# End of the tests show metrics #
+# End of the Debug show metrics #
 ##################################
-Write-Host '------------------- Ending script -------------------' -ForegroundColor Yellow
+Write-Host '------------------- Ending Debug script -------------------' -ForegroundColor Yellow
 $DebugStopWatch.Stop()
 $TimeSpentInDebugScript = $DebugStopWatch.Elapsed
 $TimeUnits = [ordered]@{TotalDays = "$($TimeSpentInDebugScript.TotalDays) D.";TotalHours = "$($TimeSpentInDebugScript.TotalHours) h.";TotalMinutes = "$($TimeSpentInDebugScript.TotalMinutes) min.";TotalSeconds = "$($TimeSpentInDebugScript.TotalSeconds) s.";TotalMilliseconds = "$($TimeSpentInDebugScript.TotalMilliseconds) ms."}
