@@ -28,7 +28,7 @@ if (Get-Variable -Name PSStyle -ErrorAction SilentlyContinue) {
 # Debug the Write-Log function
 $LogFile = "$($Env:TEMP)\SPS-PSHelper-DEBUG-$(New-Guid).log"
 # Create the log file and define the log level
-Write-Log -Message 'Entering Tests...' -Level 'DEBUG' # -LogFile $LogFile -LogLevel 'DEBUG'
+Write-Log -Message 'Entering Tests...' # -Level 'DEBUG' # -LogFile $LogFile -LogLevel 'DEBUG'
 
 BREAK
 # Should Write a verbose message and a verbose line in the log file

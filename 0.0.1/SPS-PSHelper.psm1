@@ -1,11 +1,13 @@
 Enum SPSLogLevel {
-    NONE = 0
+    NONE = 3
     DEBUG = 1
     VERBOSE = 2
     INFO = 3
     WARN = 4
+    WARNING = 4
     ERROR = 5
     CRITIC = 6
+    CRITICAL = 6
 }
 Function Write-Log {
         <#
@@ -80,7 +82,7 @@ Function Write-Log {
             $CallStack = @(Get-PSCallStack)
             $Global:TheCallStack = $CallStack
             if (($CallStack.Count -eq 3) -and ($null -eq $CallStack[2].ScriptName -or $CallStack[2].ScriptName -eq '')) {
-                $CommandLine = '## Interactive session ##'
+                $CommandLine = ''
                 $ScriptLocation = ''
             }Else{
                 $CommandLine = $($($Process.CommandLine) -replace "`"$([Regex]::Escape($($Process.Path)))`" ",'')
@@ -142,17 +144,16 @@ PSEdition: $($Host.Name)
     }
     PROCESS{
         Write-Verbose "Processing $($MyInvocation.MyCommand)"
-        # Write to the stream
         Switch ($Level) {
-            {$_ -eq [SPSLogLevel]::DEBUG} {
+            {$_ -eq 1} { # Debug level
                 Write-Debug $Message
                 BREAK
             }
-            {$_ -eq [SPSLogLevel]::VERBOSE} {
+            {$_ -eq 2} { # Verbose level
                 Write-Verbose $Message
                 BREAK
             }
-            {$_ -eq [SPSLogLevel]::INFO -or $_ -eq [SPSLogLevel]::NONE} {
+            {$_ -eq 3} { # Info level (default) also NONE
                 $Level = [SPSLogLevel]::INFO
                 if (Get-Command -Name Write-Information) {
                     Write-Information $Message
@@ -161,16 +162,18 @@ PSEdition: $($Host.Name)
                 }
                 BREAK
             }
-            {$_ -like [SPSLogLevel]::WARN} {
+            {$_ -eq 4} { # Warning level
+                $Level = [SPSLogLevel]::WARN
                 Write-Warning $Message
                 BREAK
             }
-            {$_ -like [SPSLogLevel]::ERROR} {
-                Write-Error $Message
+            {$_ -eq 5} { # Error level
+                # if (-not $Silent) { Write-Error $Message }
                 BREAK
             }
-            {$_ -like [SPSLogLevel]::CRITIC} {
-                Write-Error $Message
+            {$_ -eq 6} { # Critical level
+                $Level = [SPSLogLevel]::CRITIC  
+                # if (-not $Silent) { Write-Error $Message }
                 BREAK
             }
         }
