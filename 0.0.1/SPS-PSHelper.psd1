@@ -114,7 +114,7 @@
             ReleaseNotes = ''
     
             # Prerelease string of this module
-            Prerelease = 'prerelease.2'
+            Prerelease = 'prerelease.3'
     
         } # End of PSData hashtable
     

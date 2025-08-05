@@ -76,16 +76,26 @@ Function Write-Log {
             $Process = Get-Process -Id $PID -Verbose:$False
             $CurrentDate = Get-Date -Format (Get-Culture).DateTimeFormat.ShortDatePattern
             $CurrentTime = "$(Get-Date -Format (Get-Culture).DateTimeFormat.LongTimePattern).$(Get-Date -Format 'fff')"
+            $CallStack = @(Get-PSCallStack)
+            $Global:TheCallStack = $CallStack
+            if (($CallStack.Count -eq 3) -and ($null -eq $CallStack[2].ScriptName -or $CallStack[2].ScriptName -eq '')) {
+                $CommandLine = '## Interactive session ##'
+                $ScriptLocation = ''
+            }Else{
+                $CommandLine = $($($Process.CommandLine) -replace "`"$([Regex]::Escape($($Process.Path)))`" ",'')
+                $ScriptLocation = $CallStack[-2].Location
+            }
             $Content = @"
 **********************
-Write-Log start
+Write-Log ($((Get-Command -Name Write-Log).Module.Version)_$((Get-Command -Name Write-Log).Module.PrivateData.PSData['Prerelease'])) start
 Init Log Level: $($LogLevel)
 Start-Date: $($CurrentDate)
 Start-Time: $($CurrentTime)
 UserName: $($Env:UserName)
 Machine: $($Env:ComputerName)
 Host Application: $($($Process.Path) -Replace '"','')
-Command Line: $($($Process.CommandLine) -replace "`"$([Regex]::Escape($($Process.Path)))`" ",'')
+Command Line: $($CommandLine)
+Caller: $($ScriptLocation)
 Process ID: $($PID)
 PSVersion: $($PSVersionTable.PSVersion)
 PSEdition: $($Host.Name)
