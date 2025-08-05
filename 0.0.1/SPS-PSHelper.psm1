@@ -58,7 +58,8 @@ Function Write-Log {
                 Mandatory=$False,
                 HelpMessage='The log level. Default is INFO. Everything below will not be written.'
             )]
-            [SPSLogLevel] ${LogLevel} = [SPSLogLevel]::NONE
+            [SPSLogLevel] ${LogLevel} = [SPSLogLevel]::NONE,
+            [Switch] ${NoHeader}
         )
         BEGIN{
         Write-Verbose "Starting $($MyInvocation.MyCommand)"
@@ -174,7 +175,7 @@ PSEdition: $($Host.Name)
             }
         }
         # For the first call, create the log file Header
-        if ($FirstCall -eq $True) {
+        if (($FirstCall -eq $True) -and ($NoHeader -eq $False)) {
             $Content = New-LogHeader -LogLevel $LogLevel
             Try {
                 Add-Content -Path $LogFile -Value $Content -Force
