@@ -61,10 +61,10 @@ Function Write-Log {
                 HelpMessage='The log level. Default is INFO. Everything below will not be written.'
             )]
             [SPSLogLevel] ${LogLevel} = [SPSLogLevel]::NONE,
-            [Switch] ${NoHeader}
+            [Switch] ${NoHeader},
+            [Switch] ${Silent}
         )
         BEGIN{
-        Write-Verbose "Starting $($MyInvocation.MyCommand)"
         Function New-LogHeader {
             Param(
                 [Parameter(
@@ -143,32 +143,32 @@ PSEdition: $($Host.Name)
         }
     }
     PROCESS{
-        Write-Verbose "Processing $($MyInvocation.MyCommand)"
         Switch ($Level) {
             {$_ -eq 1} { # Debug level
-                Write-Debug $Message
+                if (-not $Silent) { Write-Debug $Message }
                 BREAK
             }
             {$_ -eq 2} { # Verbose level
-                Write-Verbose $Message
+                if (-not $Silent) { Write-Verbose $Message }
                 BREAK
             }
             {$_ -eq 3} { # Info level (default) also NONE
                 $Level = [SPSLogLevel]::INFO
                 if (Get-Command -Name Write-Information) {
-                    Write-Information $Message
+                    if (-not $Silent) { Write-Information $Message }
                 }Else{
-                    Write-Host $Message
+                    if (-not $Silent) { Write-Host $Message }
                 }
                 BREAK
             }
             {$_ -eq 4} { # Warning level
                 $Level = [SPSLogLevel]::WARN
-                Write-Warning $Message
+                if (-not $Silent) { Write-Warning $Message }
                 BREAK
             }
             {$_ -eq 5} { # Error level
-                # if (-not $Silent) { Write-Error $Message }
+                $Level = [SPSLogLevel]::ERROR
+                # if (-not $Silent) { Write-Error $Message}
                 BREAK
             }
             {$_ -eq 6} { # Critical level

@@ -12,7 +12,7 @@
     RootModule = 'SPS-PSHelper.psm1'
     
     # Version number of this module.
-    ModuleVersion = '0.0.1'
+    ModuleVersion = '0.0.2'
     
     # Supported PSEditions
     # CompatiblePSEditions = @()
@@ -114,7 +114,7 @@
             ReleaseNotes = ''
     
             # Prerelease string of this module
-            Prerelease = 'prerelease.3'
+            Prerelease = 'release.0'
     
         } # End of PSData hashtable
     
